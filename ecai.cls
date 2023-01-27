@@ -42,7 +42,7 @@
 % ----------------------------------------------------------------------
 
 \ProvidesClass{ecai}
-              [2023/01/24 v03.001 ECAI document class]
+              [2023/01/24 v03.002 ECAI document class]
 %              [2015/09/29 v02 ECAI document class]
 %              [2002/03/06 v01 ECAI-2004 document class]
 
