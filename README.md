@@ -1,24 +1,28 @@
 ## About
 
-Author support service provides LaTeX style files and `.tex` file templates designed for *IOS Press* journal articles.
+Author support service provides LaTeX style files and `.tex` file templates designed for *ECAI* conference proceedings.
 
 ## Contents
 
 The following files are given in the repository (or directly in `.zip` archive):
 
-- `iosart2x.cls`, `iosart2x.cfg` - LaTeX style files designed for *IOS Press* journal articles. Please do not change them. These files are already loaded in the respective template files; 
-- `ds_template.tex` - the main template file should be used for article preparation;
-- `iosart2x.pdf` - instructions for the preparation of a
-camera-ready paper in LaTeX. This document contains useful information regarding the structure of your document, proper tagging style, layout features, etc;
-- `iosart2x.tex` - source file for the instructions paper `iosart2x.pdf`;
-- `ios1.bst`, `bibliography.bib` - BibTeX related files. If your bibliography is structured in BibTeX format, loading your `*.bib` file and provided BibTeX style `ios1.bst` allows you to get the final format of the bibliography. Please note that `bibtex` program should be used to generate the `*.bbl` file. `bibliography.bib` is the minimal sample of `*.bib` file.
-- `ds_template.bbl` is a sample bibliography file created by BibTeX using the `ios1.bst` file.
+- `ecai.cls` - LaTeX style file designed for *ECAI* conference proceedings. Please do not change it.
+  This file is already loaded in the respective template file;
+- `ecai-sample-and-instructions.pdf` - instructions for the preparation of a camera-ready paper in LaTeX.
+  This document contains useful information regarding the structure of your document,
+  proper tagging style, layout features, etc;
+- `ecai-sample-and-instructions.tex` - the main template file should be used for article preparation and
+  the source file for the instructions paper `ecai-sample-and-instructions.pdf` simultaneously;
+- `ecai.bst`, `ecai.bib` - BibTeX related files. If your bibliography is structured in BibTeX format,
+  loading your `*.bib` file and provided BibTeX style `ecai.bst` allows you to get the final format of the bibliography.
+  Please note that `bibtex` program should be used to generate the `*.bbl` file. `ecai.bib` is the minimal sample of `*.bib` file.
+- `ecai-sample-and-instructions.bbl` is a sample bibliography file created by BibTeX using the `ecai.bst` file.
 
 ## Setup
 
 - Clone the repository or download the `.zip` archive;
-- Read the instructions (`iosart2x.pdf`) for the preparation of your LaTeX document;
-- Use the template file `ds_template.tex` to prepare your manuscript.
+- Read the instructions (`ecai-sample-and-instructions.pdf`) for the preparation of your LaTeX document;
+- Use the template file `ecai-sample-and-instructions.tex` to prepare your manuscript.
 
 ## Bug reports
 
