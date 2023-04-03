@@ -42,7 +42,7 @@
 % ----------------------------------------------------------------------
 
 \ProvidesClass{ecai}
-              [2023/01/24 v03.002 ECAI document class]
+              [2023/04/03 v03.003 ECAI document class]
 %              [2015/09/29 v02 ECAI document class]
 %              [2002/03/06 v01 ECAI-2004 document class]
 
@@ -447,23 +447,25 @@
   }%
 \def\orcids@fmt{%
   \bgroup
-    ORCiD ID: 
-    \let\fnms\@firstofone
-    \let\snm\@firstofone
-    \let\orcid\@gobble
-    \let\thanks\@gobble
-    \edef\orcid@delim{}%
-    \@for\@tempa:=\authors@ixs\do{%
-      \edef\@orcid{\csname orcid@\@tempa\endcsname}%
-      \if*\@orcid*\else
-        \orcid@delim
-        \csname author@\@tempa\endcsname
-        ~%
-        \edef\@full@orcid{\orcid@href\@orcid}%
-        \expandafter\url\expandafter{\@full@orcid}%
-        \edef\orcid@delim{, }%
-      \fi
-      }%
+    \if.\authors@ixs.\else
+      ORCiD ID: 
+      \let\fnms\@firstofone
+      \let\snm\@firstofone
+      \let\orcid\@gobble
+      \let\thanks\@gobble
+      \edef\orcid@delim{}%
+      \@for\@tempa:=\authors@ixs\do{%
+        \edef\@orcid{\csname orcid@\@tempa\endcsname}%
+        \if*\@orcid*\else
+          \orcid@delim
+          \csname author@\@tempa\endcsname
+          ~%
+          \edef\@full@orcid{\orcid@href\@orcid}%
+          \expandafter\url\expandafter{\@full@orcid}%
+          \edef\orcid@delim{, }%
+        \fi
+        }%
+    \fi
   \egroup
   }%
 
