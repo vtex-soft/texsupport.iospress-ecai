@@ -42,9 +42,9 @@
 % ----------------------------------------------------------------------
 
 \ProvidesClass{ecai}
-              [2023/04/03 v03.003 ECAI document class]
-%              [2015/09/29 v02 ECAI document class]
-%              [2002/03/06 v01 ECAI-2004 document class]
+              [2023/04/04 v03.004 ECAI document class]
+%             [2015/09/29 v02 ECAI document class]
+%             [2002/03/06 v01 ECAI-2004 document class]
 
 \newcommand\@ptsize{}
 \newif\if@restonecol
@@ -110,6 +110,10 @@
 %      }%
 %   \renewcommand\newblock{\par}}%
 %}
+
+\newif\if@double@blind@
+\DeclareOption{doubleblind}{\@double@blind@true}
+
 \ExecuteOptions{a4paper,twoside,twocolumn,final}
 \ProcessOptions
 
@@ -445,9 +449,17 @@
       }%
   \egroup
   }%
+\newcounter{orcids}%
 \def\orcids@fmt{%
   \bgroup
-    \if.\authors@ixs.\else
+    \setcounter{orcids}{0}%
+    \@for\@tempa:=\authors@ixs\do{%
+      \edef\@orcid{\csname orcid@\@tempa\endcsname}%
+      \if*\@orcid*\else
+        \refstepcounter{orcids}%
+      \fi
+      }%
+    \ifnum\value{orcids}>0\relax
       ORCiD ID: 
       \let\fnms\@firstofone
       \let\snm\@firstofone
@@ -651,6 +663,22 @@
 %    }%
 %\fi
 
+\def\paperid@fmt{%
+  Paper \#%
+  \ifdefined\@paperid
+    \@paperid
+  \fi
+  }
+\def\makepaperid{%
+  %\begin{center}%
+    \bgroup
+      \aut@mysize
+      \paperid@fmt
+    \egroup
+  %\end{center}%
+  \vskip 3em%\vskip 1.5em%
+  }
+
 %\if@titlepage
 %  \newenvironment{abstract}{%
 %      \titlepage
@@ -712,11 +740,17 @@
 %    \else
       \twocolumn[%
         \maketitle
-        \makeauthors
+        \if@double@blind@\else
+          \makeauthors
+        \fi
         \begin{center}%
-          \makeaddresses
-          \makeorcids
-          %\makedate
+          \if@double@blind@
+            \makepaperid
+          \else
+            \makeaddresses
+            \makeorcids
+            %\makedate
+          \fi
         \end{center}%
         ]%
 %    \fi
@@ -738,14 +772,16 @@
     \renewcommand{\thefootnote}{\thanks@mark}%
     % \@makefntext #1->\ifnum \thefootnote <10\hangindent 7pt\else \hangindent 9pt\fi $^{\rm \@thefnmark }$ #1
     \def\@makefntext##1{$^{\rm \@thefnmark }$ ##1}%
-    \@for\@tempa:=\authors@ixs\do{%
-      \expandafter\if.\csname thanks@text@\@tempa\endcsname.\else
-        \refstepcounter{footnote}%
-        \appto\thanks@mark{*}%
-        %\footnotetext[\thanks@mark]{\csname thanks@text@\@tempa\endcsname}%
-        \footnotetext{\csname thanks@text@\@tempa\endcsname}%
-      \fi
-      }%
+    \if@double@blind@\else
+      \@for\@tempa:=\authors@ixs\do{%
+        \expandafter\if.\csname thanks@text@\@tempa\endcsname.\else
+          \refstepcounter{footnote}%
+          \appto\thanks@mark{*}%
+          %\footnotetext[\thanks@mark]{\csname thanks@text@\@tempa\endcsname}%
+          \footnotetext{\csname thanks@text@\@tempa\endcsname}%
+        \fi
+        }%
+    \fi
   \egroup
   \setcounter{footnote}{0}%
   %
@@ -1173,8 +1209,9 @@
 % support page numbers during submission phase
 \gdef\@myfinalfoot{}
 \def\ecaisubmission{%
-\gdef\@myfinalfoot{\normalsize\hfill\thepage\hfill}
-}
+  \gdef\@myfinalfoot{\normalsize\hfill\thepage\hfill}%
+  }
+\def\paperid#1{\def\@paperid{#1}}
 
 %section title
 \def\sectionfoot#1{\gdef\@sectionfoot{#1}}
