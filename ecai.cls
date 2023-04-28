@@ -42,7 +42,7 @@
 % ----------------------------------------------------------------------
 
 \ProvidesClass{ecai}
-              [2023/04/04 v03.004 ECAI document class]
+              [2023/04/26 v03.005 ECAI document class]
 %             [2015/09/29 v02 ECAI document class]
 %             [2002/03/06 v01 ECAI-2004 document class]
 
@@ -981,9 +981,12 @@
 \def\ftype@table{2}
 \def\ext@table{lot}
 \def\fnum@table{\tablename~\thetable}
-\newenvironment{table}
-               {\@float{table}\tabsize}
-               {\end@float}
+\newenvironment{table}[1][]{%
+    \@float{table}[#1]%
+    \tabsize
+  }{%
+    \end@float
+  }
 \newenvironment{table*}
                {\@dblfloat{table}}
                {\end@dblfloat}
