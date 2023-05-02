@@ -42,7 +42,7 @@
 % ----------------------------------------------------------------------
 
 \ProvidesClass{ecai}
-              [2023/04/26 v03.005 ECAI document class]
+              [2023/04/28 v03.006 ECAI document class]
 %             [2015/09/29 v02 ECAI document class]
 %             [2002/03/06 v01 ECAI-2004 document class]
 
@@ -987,9 +987,12 @@
   }{%
     \end@float
   }
-\newenvironment{table*}
-               {\@dblfloat{table}}
-               {\end@dblfloat}
+\newenvironment{table*}[1][]{%
+    \@dblfloat{table}[#1]%
+    \tabsize
+  }{%
+    \end@dblfloat
+  }
 \newlength\abovecaptionskip
 \newlength\belowcaptionskip
 \setlength\abovecaptionskip{6\p@}
