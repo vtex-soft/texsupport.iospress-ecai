@@ -42,7 +42,7 @@
 % ----------------------------------------------------------------------
 
 \ProvidesClass{ecai}
-              [2023/04/28 v03.006 ECAI document class]
+              [2023/07/25 v03.007 ECAI document class]
 %             [2015/09/29 v02 ECAI document class]
 %             [2002/03/06 v01 ECAI-2004 document class]
 
@@ -399,26 +399,45 @@
 
 \newcounter{author}%
 \edef\authors@ixs{}%
+\edef\footnote@ixs{}%
+\newcounter{foot@note}%
+\setcounter{foot@note}{0}%
+\setcounter{footnote}{0}%
 \edef\orcid@href{https://orcid.org/}%
 \renewcommand\author[2][]{%
-  \refstepcounter{author}%
-  \expandafter\def\csname author@\the\c@author\endcsname{#2}%
-  \expandafter\def\csname author@address@ref@\the\c@author\endcsname{\MakeLowercase{#1}}%
-  %
-  \let\fnms\@gobble
-  \let\snm\@gobble
-  \expandafter\gdef\csname thanks@text@\the\c@author\endcsname{}%
-  \def\thanks##1{\expandafter\gdef\csname thanks@text@\the\c@author\endcsname{##1}}%
-  \expandafter\gdef\csname orcid@\the\c@author\endcsname{}%
-  \def\orcid##1{\expandafter\gdef\csname orcid@\the\c@author\endcsname{##1}}%
-  \setbox\@tempboxa=\vbox{#2}%
-  %
-  \edef\authors@ixs{%
-    \if.\authors@ixs.\else
-      \authors@ixs ,%
-    \fi
-    \the\c@author
-    }%
+  \bgroup
+    \refstepcounter{author}%
+    \expandafter\gdef\csname author@\the\c@author\endcsname{#2}%
+    \expandafter\gdef\csname author@address@ref@\the\c@author\endcsname{\MakeLowercase{#1}}%
+    %
+    \let\fnms\@gobble
+    \let\snm\@gobble
+    \expandafter\gdef\csname thanks@text@\the\c@author\endcsname{}%
+    \def\thanks##1{\expandafter\gdef\csname thanks@text@\the\c@author\endcsname{##1}}%
+    \renewcommand\footnote[2][]{%
+      \refstepcounter{foot@note}%
+      \expandafter\gdef\csname footnote@text@\the\c@foot@note\endcsname{##2}%
+      \if.##1.\relax
+        \global\refstepcounter{footnote}%
+        \edef\@ix{\the\c@footnote}%
+      \else
+        \edef\@ix{##1}%
+      \fi
+      \expandafter\xdef\csname footnote@ix@\the\c@foot@note\endcsname{\@ix}%
+      \xdef\footnote@ixs{\footnote@ixs,\the\c@foot@note}%
+      }%
+    \renewcommand\footnotemark[1][]{}%
+    \expandafter\gdef\csname orcid@\the\c@author\endcsname{}%
+    \def\orcid##1{\expandafter\gdef\csname orcid@\the\c@author\endcsname{##1}}%
+    \setbox\@tempboxa=\vbox{#2}%
+    %
+    \xdef\authors@ixs{%
+      \if.\authors@ixs.\else
+        \authors@ixs ,%
+      \fi
+      \the\c@author
+      }%
+  \egroup
   }
 \def\authors@fmt{%
   \bgroup
@@ -426,7 +445,10 @@
     \let\snm\@firstofone
     \let\orcid\@gobble
     \def\thanks@mark{}%
+    \def\@thanks{}%
     \renewcommand{\thefootnote}{\thanks@mark}%
+    \let\footnote@mark\footnotemark
+    \global\setcounter{footnote}{0}%
     \@for\@tempa:=\authors@ixs\do{%
       \ifnum\@tempa>1\relax
         \ifnum\@tempa=\numexpr\value{author}\relax
@@ -437,10 +459,36 @@
       \fi
       \def\@thanks{}%
       \def\thanks##1{%
-        \def\@thanks{%
+        \appto\@thanks{%
           \textsuperscript{\normalfont ;}%
           \appto\thanks@mark{*}%
-          \raise-2\p@\hbox{\footnotemark}%
+          \raise-2\p@\hbox{\footnote@mark}%
+          \global\addtocounter{footnote}{-1}%
+          }%
+        }%
+      \renewcommand\footnote[2][]{%
+        \appto\@thanks{%
+          \textsuperscript{%
+            \normalfont ,%
+            \if.##1.\relax
+              \global\refstepcounter{footnote}%
+              \the\c@footnote
+            \else
+              $##1$%
+            \fi
+            }%
+          }%
+        }%
+      \renewcommand\footnotemark[1][]{%
+        \appto\@thanks{%
+          \textsuperscript{%
+            \normalfont ,%
+            \if.##1.\relax
+              \the\c@footnote
+            \else
+              $##1$%
+            \fi
+            }%
           }%
         }%
       \csname author@\@tempa\endcsname
@@ -465,6 +513,8 @@
       \let\snm\@firstofone
       \let\orcid\@gobble
       \let\thanks\@gobble
+      \renewcommand\footnote[2][]{}%
+      \renewcommand\footnotemark[1][]{}%
       \edef\orcid@delim{}%
       \@for\@tempa:=\authors@ixs\do{%
         \edef\@orcid{\csname orcid@\@tempa\endcsname}%
@@ -591,7 +641,7 @@
   %
   \def\@makeauthors{%
     %\vskip 1.5em%
-    \let \footnote \thanks
+    %\let \footnote \thanks
     \begin{center}%
       {%
         \aut@mysize\bfseries
@@ -612,7 +662,7 @@
       \@thanks
     \endgroup
 %    \setcounter{footnote}{0}%
-    \global\let\thanks\relax
+    \global\let\thanks\@gobble
     \global\let\@thanks\@empty
     \global\let\@author\@empty
     \global\renewcommand\author[2][]{}%
@@ -766,7 +816,7 @@
     \end{center}%
   \fi
   %
-  \setcounter{footnote}{0}%
+% \setcounter{footnote}{0}%
   \bgroup
     \def\thanks@mark{}%
     \renewcommand{\thefootnote}{\thanks@mark}%
@@ -775,15 +825,25 @@
     \if@double@blind@\else
       \@for\@tempa:=\authors@ixs\do{%
         \expandafter\if.\csname thanks@text@\@tempa\endcsname.\else
-          \refstepcounter{footnote}%
+          %\refstepcounter{footnote}%
           \appto\thanks@mark{*}%
           %\footnotetext[\thanks@mark]{\csname thanks@text@\@tempa\endcsname}%
           \footnotetext{\csname thanks@text@\@tempa\endcsname}%
         \fi
         }%
+      \@for\@tempa:=\footnote@ixs\do{%
+        \expandafter\if.\csname footnote@text@\@tempa\endcsname.\else
+          \expandafter\ifx\csname footnote@text@\@tempa\endcsname\relax\else
+            %\refstepcounter{footnote}%
+            \def\thanks@mark{\csname footnote@ix@\@tempa\endcsname}%
+            %\footnotetext[\thanks@mark]{\csname footnote@text@\@tempa\endcsname}%
+            \footnotetext{\csname footnote@text@\@tempa\endcsname}%
+          \fi
+        \fi
+        }%
     \fi
   \egroup
-  \setcounter{footnote}{0}%
+% \setcounter{footnote}{0}%
   %
   \bibliographystyle{ecai}%
   %
