@@ -42,7 +42,7 @@
 % ----------------------------------------------------------------------
 
 \ProvidesClass{ecai}
-              [2023/07/25 v03.007 ECAI document class]
+              [2023/07/31 v03.008 ECAI document class]
 %             [2015/09/29 v02 ECAI document class]
 %             [2002/03/06 v01 ECAI-2004 document class]
 
@@ -482,7 +482,11 @@
       \renewcommand\footnotemark[1][]{%
         \appto\@thanks{%
           \textsuperscript{%
-            \normalfont ,%
+            \if*##1\relax
+              \normalfont ;%
+            \else
+              \normalfont ,%
+            \fi
             \if.##1.\relax
               \the\c@footnote
             \else
