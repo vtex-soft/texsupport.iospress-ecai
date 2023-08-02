@@ -42,7 +42,7 @@
 % ----------------------------------------------------------------------
 
 \ProvidesClass{ecai}
-              [2023/07/31 v03.008 ECAI document class]
+              [2023/08/02 v03.009 ECAI document class]
 %             [2015/09/29 v02 ECAI document class]
 %             [2002/03/06 v01 ECAI-2004 document class]
 
@@ -460,7 +460,7 @@
       \def\@thanks{}%
       \def\thanks##1{%
         \appto\@thanks{%
-          \textsuperscript{\normalfont ;}%
+          \textsuperscript{\normalfont ,}%
           \appto\thanks@mark{*}%
           \raise-2\p@\hbox{\footnote@mark}%
           \global\addtocounter{footnote}{-1}%
@@ -482,11 +482,7 @@
       \renewcommand\footnotemark[1][]{%
         \appto\@thanks{%
           \textsuperscript{%
-            \if*##1\relax
-              \normalfont ;%
-            \else
-              \normalfont ,%
-            \fi
+            \normalfont ,%
             \if.##1.\relax
               \the\c@footnote
             \else
